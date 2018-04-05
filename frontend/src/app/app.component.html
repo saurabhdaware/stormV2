@@ -1,0 +1,11 @@
+<div class="multiverse" #rendererContainer></div>
+<div class="controls" style="position:absolute;top:0;left:0;z-index:1">
+    <button class="earth" (click)='takeMeToTheEarth()'>Earth</button>
+    <button class="moon" (click)='takeMeToTheMoon()'>Moon</button>
+    <button class="mars" (click)='takeMeToTheMars()'>Mars</button>
+    <button class="sun" (click)='takeMeToTheMoon()'>Sun</button>
+    <button (click)='moveFaster()'>+5x</button>
+    <input type="date" (ngModel)='date' name='date' value="1983-01-03">
+    <input type="time" (ngModel)='time' name='time' value="09:00">
+    <button (click)='boost()'>Boost</button>
+</div>
