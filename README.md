@@ -4,7 +4,7 @@
 ## > Documentation :
 
 ### About STORMV2 :
-  Stormv2 is a Solar System Simulator which simulates the planet positions which can be furthur used in field of astronomy, astrodynamics and other related fields.
+  Stormv2 is a Solar System Simulator which simulates the planetary positions at a particular date which can be furthur used in field of astronomy, astrodynamics and other related fields.
 
 ## > Screenshots :
 ![](http://res.cloudinary.com/saurabhdaware/image/upload/v1524898358/Screenshot_81_syfrfp.png)
