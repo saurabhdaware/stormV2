@@ -59,9 +59,13 @@ export class PlanetsService{
       scene.add(this.sunMesh);
       sunMaterial.map = THREE.ImageUtils.loadTexture('assets/sunmap.jpg');
       sunMaterial.aoMapIntensity = 10;
-
+      this.sunMesh.position.set(
+        0,
+        0,
+        0
+      )
       // SUN BRIGHTNESS --
-      var light = new THREE.PointLight( 0xffffcc, 3);
+      var light = new THREE.PointLight( 0xffffcc, 2);
       light.position.set( 0, 0, 0 );
       light.castShadow = true;
       light.shadow.mapSize.width = 512;  // default
@@ -70,10 +74,9 @@ export class PlanetsService{
       light.shadow.camera.far = 500000      // default
       scene.add( light );
 
+
       // Darker Side of Objects
       scene.add(new THREE.AmbientLight(0x060606));
-
-      
   }
 
   earth(scene){
@@ -167,7 +170,7 @@ export class PlanetsService{
     this.saturnMesh.add(ringMesh);
     this.saturnMesh.add(ring2Mesh);
     this.saturnMesh.add(ring1Mesh);
-    this.saturnMesh.position.x = -10;
+    this.saturnMesh.position.x = 7000;
     this.saturnMesh.rotation.z = 26.7*Math.PI/180;
   }
 
@@ -177,7 +180,7 @@ export class PlanetsService{
     this.mercuryMesh = new THREE.Mesh(geometry,material)
     material.map =  THREE.ImageUtils.loadTexture('assets/mercurymap.jpg');
     scene.add(this.mercuryMesh);
-    this.mercuryMesh.position.x = 10;
+    this.mercuryMesh.position.x = 1000;
   }
 
   venus(scene){
@@ -186,7 +189,7 @@ export class PlanetsService{
     this.venusMesh = new THREE.Mesh(geometry,material)
     material.map =  THREE.ImageUtils.loadTexture('assets/venusmap.jpg');
     scene.add(this.venusMesh);
-    this.venusMesh.position.x = 15;
+    this.venusMesh.position.x = 1500;
   }
 
   jupiter(scene){
@@ -195,7 +198,7 @@ export class PlanetsService{
     this.jupiterMesh = new THREE.Mesh(geometry,material)
     material.map =  THREE.ImageUtils.loadTexture('assets/jupitermap.jpg');
     scene.add(this.jupiterMesh);
-    this.jupiterMesh.position.x = 20;
+    this.jupiterMesh.position.x = 6000;
   }
 
   uranus(scene){
@@ -204,7 +207,7 @@ export class PlanetsService{
     this.uranusMesh = new THREE.Mesh(geometry,material)
     material.map =  THREE.ImageUtils.loadTexture('assets/uranusmap.jpg');
     scene.add(this.uranusMesh);
-    this.uranusMesh.position.x = 25;
+    this.uranusMesh.position.x = 9000;
     this.uranusMesh.rotation.z = 90*Math.PI/180;
 
     var ringGeometry = new THREE.RingGeometry( 0.30, 0.32, 32);
@@ -226,7 +229,7 @@ export class PlanetsService{
     this.neptuneMesh = new THREE.Mesh(geometry,material)
     material.map =  THREE.ImageUtils.loadTexture('assets/neptunemap.jpg');
     scene.add(this.neptuneMesh);
-    this.neptuneMesh.position.x = 30;
+    this.neptuneMesh.position.x = 10000;
   }
 
   moon(scene){
