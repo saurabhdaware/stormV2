@@ -1,11 +1,27 @@
 <div class="multiverse" #rendererContainer></div>
 <div class="controls" style="position:absolute;top:0;left:0;z-index:1">
+    <button class="sun" (click)='takeMeToTheSun()'>Sun</button>
+    <button class="mercury" (click)='takeMeToTheMercury()'>Mercury</button>
+    <button class="venus" (click)='takeMeToTheVenus()'>Venus</button>
     <button class="earth" (click)='takeMeToTheEarth()'>Earth</button>
-    <button class="moon" (click)='takeMeToTheMoon()'>Moon</button>
+    <button class="moon" (click)='takeMeToTheMoon()'>Luna</button>
     <button class="mars" (click)='takeMeToTheMars()'>Mars</button>
-    <button class="sun" (click)='takeMeToTheMoon()'>Sun</button>
+    <button class="jupiter" (click)='takeMeToTheJupiter()'>Jupiter</button>
+    <button class="saturn" (click)='takeMeToTheSaturn()'>Saturn</button>
+    <button class="uranus" (click)='takeMeToTheUranus()'>Uranus</button>
+    <button class="neptune" (click)='takeMeToTheNeptune()'>Neptune</button>
+
     <button (click)='moveFaster()'>+5x</button>
-    <input type="date" (ngModel)='date' name='date' value="1983-01-03">
-    <input type="time" (ngModel)='time' name='time' value="09:00">
-    <button (click)='boost()'>Boost</button>
+    <button style="width:150px;" (click)='realtimeLocation=true'>Real Positions</button>
+    <button style="width:150px;" (click)='boost()'>Launch to Mars</button>
+</div>
+<div *ngIf="realtimeLocation"  style="position:absolute;top:0;left:0;z-index:2;" class="form-window">
+    <form>
+        <div style="text-align:left">
+            <label for='date'><b>Date:</b></label>&nbsp; &nbsp;<input type="date" [(ngModel)]='date' name='date' value=""><br>
+            <label for='time'><b>Time:</b></label>&nbsp; &nbsp;<input type="time" [(ngModel)]='time' name='time' value="09:00"><br><br>
+        </div>
+        <button style="width:250px;" (click)='getPlanetPositions()'>Get Real Positions</button><br>
+        <button style="width:250px;" (click)='realtimeLocation=false'>Cancel</button>
+    </form>
 </div>

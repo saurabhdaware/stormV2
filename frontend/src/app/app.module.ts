@@ -7,6 +7,8 @@ import { AppComponent } from './app.component';
 import { PlanetsService } from './services/planets.service';
 import { ControllerService } from './services/controller.service';
 import { HttpClientModule } from '@angular/common/http';
+import {FormsModule} from '@angular/forms';
+
 
 
 @NgModule({
@@ -15,7 +17,8 @@ import { HttpClientModule } from '@angular/common/http';
   ],
   imports: [
     BrowserModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
   ],
   providers: [PlanetsService,ControllerService],
   bootstrap: [AppComponent]

@@ -24,6 +24,9 @@ export class AppComponent{
   earthRotAngleDeg=0;
   marsRotAngleDeg = 0;
   i = 0;
+  realtimeLocation = false;
+  date = '1993-01-03';
+  time='10:00';
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) { 
@@ -77,7 +80,6 @@ export class AppComponent{
     Planets.earth(this.scene);
     Planets.moon(this.scene);
     Planets.mars(this.scene);
-    this.sendRequest();
     Planets.saturn(this.scene);
     Planets.mercury(this.scene);
     Planets.venus(this.scene);
@@ -88,35 +90,37 @@ export class AppComponent{
     Planets.galaxy(this.scene);
   }
 
-  sendRequest(){
-    this.http.get("http://localhost:8000/date/",{responseType:"json"}).subscribe(data=>console.log(data.days));
-  }
-
   ngAfterViewInit() {
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.rendererContainer.nativeElement.appendChild(this.renderer.domElement);
     document.body.appendChild( this.renderer.domElement );
     this.animate();
-
+    console.log(this.date);
+    // var axesHelper = new THREE.AxesHelper( 500000 );
+    // this.scene.add( axesHelper );
   }
 
   marsRevolve(){
-    let marsRevAngleDeg = 270+(this.earthday*360/687);
-    let marsSunDist = 227.9*10/100;
-    this.Planets.marsMesh.position.set(
-      Math.cos(marsRevAngleDeg*Math.PI/180) * marsSunDist,
-      0,
-      -Math.sin(marsRevAngleDeg*Math.PI/180) * marsSunDist
-    );
+    let marsRevAngleDeg = 210+(this.earthday*360/687);
+    let marsSunDistPeri = 206.7*10;
+    let marsSunDistAphi = 249.2*10;
+    let marsSemiMajorAxis = (marsSunDistPeri+marsSunDistAphi)/2
+    let marsSemiMinorAxis = 229.58*10;
 
+    this.Planets.marsMesh.position.set(
+      (-1*(marsSemiMajorAxis - marsSunDistPeri)*Math.sin(60*Math.PI/180)+marsSemiMajorAxis*Math.cos(330*Math.PI/180)*Math.cos(marsRevAngleDeg*Math.PI/180))+(marsSemiMinorAxis*Math.sin(-330*Math.PI/180)*Math.sin(marsRevAngleDeg*Math.PI/180)), 
+      0,
+      -(-1*(marsSemiMajorAxis - marsSunDistPeri)*Math.cos(60*Math.PI/180)+marsSemiMinorAxis*Math.cos(-330*Math.PI/180)*Math.sin(marsRevAngleDeg*Math.PI/180))-(marsSemiMajorAxis*Math.sin(330*Math.PI/180)*Math.cos(marsRevAngleDeg*Math.PI/180))
+    );
+ 
     this.marsRotAngleDeg = this.earthday*360/1.3;
     this.Planets.marsMesh.rotation.y =  this.marsRotAngleDeg*Math.PI/180;
   }
 
   orbitalMovement(){
-    let inOrbitAngleDeg = this.earthday*360/27;
-    let inOrbitPeri = 0.06371+0.005;
-    let inOrbitApo = 0.06371+ 0.005;
+    let inOrbitAngleDeg=this.earthday*360/1;
+    let inOrbitPeri = 0.06371+0.5;
+    let inOrbitApo = 0.06371+ 0.6;
     let inOrbitSemiMinor = 0.06371+ 0.005;
     // let dateMoon = Date.now() * 0.000115;
     // let date = Date.now()*0.001;
@@ -133,6 +137,12 @@ export class AppComponent{
         this.Planets.earthMesh.position.z-Math.sin(inOrbitAngleDeg*Math.PI/180)*inOrbitSemiMinor
       );
     }
+
+    // this.Planets.orbitalMesh.position.set(
+    //   this.Planets.earthMesh.position.x + Math.cos(inOrbitAngleDeg*Math.PI/180) * (inOrbitPeri+((inOrbitApo-inOrbitPeri)*Math.cos(inOrbitAngleDeg*Math.PI/180))),
+    //   -Math.sin(inOrbitAngleDeg*Math.PI/180)*0.0001,
+    //   this.Planets.earthMesh.position.z - Math.sin(inOrbitAngleDeg*Math.PI/180) * (inOrbitPeri)
+    // );
   }
 
 
@@ -156,30 +166,18 @@ export class AppComponent{
   }
 
   earthRevolve(){
-    let earthSunDistPeri = 147.6*10/100;
-    let earthSunDistAphi = 152.1*10/100;
-    let earthSunDist = 145*10/100;
-    let earthRevAngleDeg = 270+(this.earthday*360/365.25);
-    // console.log(Math.cos(earthRevAngleDeg*Math.PI/180));
-    // let date = Date.now()*0.001;
-    if(Math.cos(earthRevAngleDeg*Math.PI/180)>0){
-      this.Planets.earthMesh.position.set(
-        Math.cos(earthRevAngleDeg*Math.PI/180) * earthSunDistPeri, 
-        0,
-        -Math.sin(earthRevAngleDeg*Math.PI/180) * earthSunDist
-      );
-    }else{
-      this.Planets.earthMesh.position.set(
-        Math.cos(earthRevAngleDeg*Math.PI/180) * earthSunDist,
-          0,
-        -Math.sin(earthRevAngleDeg*Math.PI/180) * earthSunDistAphi
-      );
-    }
-    // this.Planets.earthMesh.position.set(
-    // Math.cos(earthRevAngleDeg*Math.PI/180) * earthSunDist,
-    //   0,
-    //   -Math.sin(earthRevAngleDeg*Math.PI/180) * earthSunDist
-    // );
+    let earthSunDistPeri = 147.6*10;
+    let earthSunDistAphi = 152.1*10;
+    let earthSemiMajorAxis = (earthSunDistAphi + earthSunDistPeri)/2;
+    let earthSemiMinorAxis = 149.58*10;
+    let earthRevAngleDeg = 0+(this.earthday*360/365.25);
+    // let earthRevAngleDeg = 0;
+    this.Planets.earthMesh.position.set(
+      (-1*(earthSemiMajorAxis - earthSunDistPeri)*Math.sin(30*Math.PI/180)+earthSemiMajorAxis*Math.cos(300*Math.PI/180)*Math.cos(earthRevAngleDeg*Math.PI/180))+(earthSemiMinorAxis*Math.sin(-300*Math.PI/180)*Math.sin(earthRevAngleDeg*Math.PI/180)), 
+      0,
+      -((earthSemiMajorAxis - earthSunDistPeri)*Math.cos(30*Math.PI/180)+earthSemiMinorAxis*Math.cos(-300*Math.PI/180)*Math.sin(earthRevAngleDeg*Math.PI/180))-(earthSemiMajorAxis*Math.sin(300*Math.PI/180)*Math.cos(earthRevAngleDeg*Math.PI/180))
+    );
+
   }
 
   earthRotate(){
@@ -187,10 +185,11 @@ export class AppComponent{
     this.earthRotAngleDeg += 0.00004166666*this.i;
     // console.log(this.earthRotAngleDeg);
     this.Planets.earthMesh.rotation.y =  this.earthRotAngleDeg*Math.PI/180;
-
   }
  
-  // Controllers and other functions ::::::::::::::::::::::::::::::::::
+
+
+  // Controllers, Teleport and other functions ::::::::::::::::::::::::::::::::::
 
   takeMeToTheEarth(){
     // this.camera.position.x = this.Planets.earthMesh.position.x
@@ -199,13 +198,13 @@ export class AppComponent{
     this.camera.position.x = 0;
     this.camera.position.y = 0;
     this.camera.position.z = 0.2;
+    this.camera.rotation.y = 0;
     this.Planets.earthMesh.add(this.camera);
     this.Planets.moonMesh.remove(this.camera);
-    this.controls.zoomSpeed = 0.01;
-    this.controls.panSpeed = 0.1
-    this.controls.rotateSpeed = 1
-    // this.controls.target.set(this.Planets.earthMesh.position.x,this.Planets.earthMesh.position.y,this.Planets.earthMesh.position.z)
-    this.controls.update();
+    // this.controls.zoomSpeed = 0.01;
+    // this.controls.panSpeed = 0.1
+    // this.controls.rotateSpeed = 1
+    // this.controls.update();
   }
 
   takeMeToTheMoon(){
@@ -221,10 +220,77 @@ export class AppComponent{
     this.camera.position.z = 0.09;
     this.Planets.marsMesh.add(this.camera);
   }
+
+  takeMeToTheSun(){
+    this.camera.position.x = 0;
+    this.camera.position.y = 0;
+    this.camera.position.z = 10;
+    this.Planets.sunMesh.add(this.camera);
+  }
+
+  takeMeToTheMercury(){
+    this.camera.position.x = 0;
+    this.camera.position.y = 0;
+    this.camera.position.z = 0.04;
+    this.Planets.mercuryMesh.add(this.camera);
+  }
+
+  takeMeToTheVenus(){
+    this.camera.position.x = 0;
+    this.camera.position.y = 0;
+    this.camera.position.z = 0.2;
+    this.Planets.venusMesh.add(this.camera);
+  }
+
+  takeMeToTheJupiter(){
+    this.camera.position.x = 0;
+    this.camera.position.y = 0;
+    this.camera.position.z = 1.4;
+    this.Planets.jupiterMesh.add(this.camera);
+  }
+
+  takeMeToTheSaturn(){
+    this.camera.position.x = 0;
+    this.camera.position.y = 0;
+    this.camera.position.z = 1.5;
+    this.Planets.saturnMesh.add(this.camera);
+  }
+
+  takeMeToTheUranus(){
+    this.camera.position.x = 0;
+    this.camera.position.y = 0;
+    this.camera.position.z = 0.5;
+    this.Planets.uranusMesh.add(this.camera);
+  }
+
+  takeMeToTheNeptune(){
+    this.camera.position.x = 0;
+    this.camera.position.y = 0;
+    this.camera.position.z = 0.5;
+    this.Planets.neptuneMesh.add(this.camera);
+  }
+
   moveFaster(){
     this.i = this.i + 10000;
   }
 
+  getPlanetPositions(){
+    let d = new Date(this.date);
+    let day=d.getDate();
+    let month = d.getMonth()+1;
+    let year = d.getFullYear();
+    this.http.get("http://localhost:8000/date/?day="+day+"&month="+month+"&year="+year).subscribe(data => this.earthRotAngleDeg = data.days*360)
+  }
+
+  getPlanetRotation(){
+    let t = this.time;
+    this.http.get("http://localhost:8000/getRotationEarth/?hr="+this.time).subscribe(data => this.earthRotAngleDeg = this.earthday*360+ (data.hr/24) )
+
+  }
+
+  getAngle(){
+    // this.http.get("http://localhost:8000/angle/?totalDays="+this.earthday+"&yearOnThatPlanet=365.25").subscribe(data=>{this.earthRevAngleDeg = 270+22.5+int(data.angle)})
+  }
   animate() {
     setInterval(()=>{
       this.moonRevolve();
